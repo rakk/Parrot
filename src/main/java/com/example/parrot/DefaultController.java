@@ -1,6 +1,7 @@
 package com.example.parrot;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,9 +22,19 @@ public class DefaultController {
     private static final Pattern REQUEST_CUSTOM_STATUS_WITH_SPECIAL_CASE = Pattern.compile("/give-me/(\\d+)/every/(\\d+)-th-time-give-me/(\\d+)");
     private static final Pattern REQUEST_DEFAULT_STATUS_WITH_SPECIAL_CASE = Pattern.compile("/every/(\\d+)-th-time-give-me/(\\d+)");
 
-    private static final int DEFAULT_STATUS = 200;
-
     private static final Map<String, Integer> SPECIAL_REQUEST_COUNTERS = new HashMap<>();
+
+    private int defaultStatus;
+
+    public DefaultController(@Value("${parrot.default-status}") String defaultStatusString) {
+        try {
+            this.defaultStatus = Integer.parseInt(defaultStatusString);
+            HttpStatus.valueOf(this.defaultStatus);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            log.error("Invalid value of 'parrot.default-status' should be a number and correct HTTP status", illegalArgumentException);
+            throw illegalArgumentException;
+        }
+    }
 
     @RequestMapping(value = "/**")
     public ResponseEntity<String> handleRequest(HttpServletRequest request) {
@@ -40,7 +52,7 @@ public class DefaultController {
     }
 
     private int getStatus(String requestUri) {
-        int status = DEFAULT_STATUS;
+        int status = this.defaultStatus;
         Matcher matcherSpecialCase = REQUEST_CUSTOM_STATUS_WITH_SPECIAL_CASE.matcher(requestUri);
         if (matcherSpecialCase.matches()) {
             status = getStatusForCustomStatusWithSpecialCase(requestUri, matcherSpecialCase);
@@ -91,12 +103,7 @@ public class DefaultController {
     }
 
     private Integer getRequestCounterAndIncrement(String requestUri) {
-        Integer tracking = SPECIAL_REQUEST_COUNTERS.get(requestUri);
-        if (tracking == null) {
-            tracking = 0;
-        }
-        return tracking + 1;
+        return Optional.ofNullable(SPECIAL_REQUEST_COUNTERS.get(requestUri)).orElse(0) + 1;
     }
-
 
 }
