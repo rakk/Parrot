@@ -18,8 +18,7 @@ curl -I http://localhost:8080/give-me/500
 returns *500* response (always)
 
 ## Custom response with special case
-Request like */give-me/DEFAULT_STATUS/evert/N-th-time-give-me/SPECIAL_STATUS
-For every N-th request will return *SPECIAL_STATUS*
+Request like */give-me/DEFAULT_STATUS/evert/N-th-time-give-me/SPECIAL_STATUS for every N-th request will return *SPECIAL_STATUS*
 
 For other request will return *DEFAULT_STATUS*
 
