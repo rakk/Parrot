@@ -20,7 +20,7 @@ returns *500* response (always)
 ## Custom response with special case
 Request like */give-me/DEFAULT_STATUS/evert/N-th-time-give-me/SPECIAL_STATUS* for every N-th request will return *SPECIAL_STATUS*
 
-For other request will return *DEFAULT_STATUS*
+Other requests return *DEFAULT_STATUS*
 
 example:
 ```
@@ -29,8 +29,8 @@ curl -I http://localhost:8080/give-me/200/every/5-th-time-give-me/503
 returns 503 for every 5-th request and 200 for the rest of requests
 
 ## Default response
-Request not matched will return default status (200)
+Requests not matched return default status (200)
 ```
-curl -I http://localhost:8080/some-request
+curl -I http://localhost:8080/any-not-matched-request
 ```
 returns *200* response (always)
