@@ -7,7 +7,6 @@ Problem to solve:
 
 # Example of usage:
 
-
 ## Custom response 
 Request like */give-me/STATUS* return specified *STATUS* code
 
@@ -17,19 +16,33 @@ curl -I http://localhost:8080/give-me/500
 ```
 returns *500* response (always)
 
-## Custom response with special case
-Request like */give-me/DEFAULT_STATUS/evert/N-th-time-give-me/SPECIAL_STATUS* for every N-th request will return *SPECIAL_STATUS*
+## Default response with special case
 
-Other requests return *DEFAULT_STATUS*
+Request like */evert/N-th-time-give-me/SPECIAL_STATUS* 
+returns *DEFAULT_STATUS* but for every N-th (eg. 5th) requests returns *SPECIAL_STATUS*
+
 
 example:
 ```
-curl -I http://localhost:8080/give-me/200/every/5-th-time-give-me/503
+curl -I http://localhost:8080/every/5-th-time-give-me/501
 ```
-returns 503 for every 5-th request and 200 for the rest of requests
+returns 501 for every 5-th request and 200 for the rest of requests
+
+
+## Custom response with special case
+Request like */give-me/CUSTOM_STATUS/evert/N-th-time-give-me/SPECIAL_STATUS* 
+returns *CUSTOM_STATUS* but for every N-th (eg. 5th) requests returns *SPECIAL_STATUS*
+
+example:
+```
+curl -I http://localhost:8080/give-me/208/every/5-th-time-give-me/503
+```
+returns 503 for every 5-th request and 208 for the rest of requests
 
 ## Default response
 Requests not matched return default status (200)
+
+example:
 ```
 curl -I http://localhost:8080/any-not-matched-request
 ```

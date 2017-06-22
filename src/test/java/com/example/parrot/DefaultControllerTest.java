@@ -2,6 +2,7 @@ package com.example.parrot;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,11 +52,31 @@ public class DefaultControllerTest {
     }
 
     @Test
-    public void shouldReturnDifferentStautsEveryNth() throws Exception {
+    public void shouldReturnDifferentStatusEveryNthOrDefault() throws Exception {
 
-        Request request = new Request("GET", "/give-me/200/every/5-th-time-give-me/404");
-        Response defaultResponse = new Response(200, "Handling: GET /give-me/200/every/5-th-time-give-me/404 => 200");
-        Response specialResponse = new Response(404, "Handling: GET /give-me/200/every/5-th-time-give-me/404 => 404");
+        Request request = new Request("GET", "/every/4-th-time-give-me/404");
+        Response defaultResponse = new Response(200, "Handling: GET /every/4-th-time-give-me/404 => 200");
+        Response specialResponse = new Response(404, "Handling: GET /every/4-th-time-give-me/404 => 404");
+        TestData defaultTestData = new TestData(request, defaultResponse);
+        TestData specialData = new TestData(request, specialResponse);
+
+        List<TestData> examples = new ArrayList<>();
+        examples.add(defaultTestData);
+        examples.add(defaultTestData);
+        examples.add(defaultTestData);
+        examples.add(specialData);
+        examples.add(defaultTestData);
+
+        for (TestData example : examples) {
+            check(example.getRequest(), example.getExpectedResponse());
+        }
+    }
+
+    @Test
+    public void shouldReturnDifferentStatusEveryNthOrCustom() throws Exception {
+        Request request = new Request("GET", "/give-me/208/every/5-th-time-give-me/404");
+        Response defaultResponse = new Response(208, "Handling: GET /give-me/208/every/5-th-time-give-me/404 => 208");
+        Response specialResponse = new Response(404, "Handling: GET /give-me/208/every/5-th-time-give-me/404 => 404");
         TestData defaultTestData = new TestData(request, defaultResponse);
         TestData specialData = new TestData(request, specialResponse);
 
