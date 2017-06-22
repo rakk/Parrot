@@ -10,6 +10,7 @@ Problem to solve:
 
 ## Custom response 
 Request like */give-me/STATUS* return specified *STATUS* code
+
 example:
 ```
 curl -I http://localhost:8080/give-me/500
@@ -22,7 +23,7 @@ For every N-th request will return *SPECIAL_STATUS*
 
 For other request will return *DEFAULT_STATUS*
 
-eg.
+example:
 ```
 curl -I http://localhost:8080/give-me/200/every/5-th-time-give-me/503
 ```
